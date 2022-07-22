@@ -1,0 +1,13 @@
+package com.thor.storage.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+@AllArgsConstructor
+@Builder
+@Data
+public class ExceptionFieldError {
+    private String field;
+    private String error;
+}
