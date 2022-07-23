@@ -4,6 +4,7 @@ import com.azure.storage.blob.BlobClientBuilder;
 import com.thor.storage.document.StorageFileDocument;
 import com.thor.storage.dto.StorageResponse;
 import com.thor.storage.enumerable.FileType;
+import com.thor.storage.exception.BusinessException;
 import com.thor.storage.repository.StorageRepository;
 import com.thor.storage.service.StorageService;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static com.thor.storage.constant.ErrorConstant.FILE_NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -35,7 +42,17 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public StorageResponse getById(String id) {
-        return null;
+        var optional = this.repository.findById(id);
+        if (!optional.isPresent())
+            throw new BusinessException(FILE_NOT_FOUND, NOT_FOUND);
+        var file = optional.get();
+        return StorageResponse.builder()
+                .bytes(this.client.blobName(id).buildClient().downloadContent().toBytes())
+                .name(file.getName())
+                .id(file.getId())
+                .extension(file.getType().getExtension())
+                .mime(file.getType().getMime())
+                .build();
     }
 
     @Override
