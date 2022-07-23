@@ -8,9 +8,6 @@ spring:
     mongodb:
       uri: mongodb+srv://condominium:62DC9G8V4RlAwqOX@condominium.qfgszpm.mongodb.net/storage
       database: storage
-  servlet:
-    multipart:
-      location: c:/tmp
 
 thor:
   azure:
