@@ -3,6 +3,7 @@ package com.thor.storage.rest;
 import com.thor.storage.dto.StorageResponse;
 import com.thor.storage.service.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
@@ -34,5 +36,11 @@ public class StorageController {
     @ResponseStatus(CREATED)
     public String upload(@RequestParam MultipartFile file) throws IOException {
         return this.service.insert(file);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        this.service.delete(id);
     }
 }

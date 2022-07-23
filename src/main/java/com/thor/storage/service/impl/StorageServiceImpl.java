@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static com.thor.storage.constant.ErrorConstant.FILE_NOT_FOUND;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -42,10 +43,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public StorageResponse getById(String id) {
-        var optional = this.repository.findById(id);
-        if (!optional.isPresent())
-            throw new BusinessException(FILE_NOT_FOUND, NOT_FOUND);
-        var file = optional.get();
+        var file = findById(id);
         return StorageResponse.builder()
                 .bytes(this.client.blobName(id).buildClient().downloadContent().toBytes())
                 .name(file.getName())
@@ -57,7 +55,8 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public void delete(String id) {
-
+        this.repository.delete(findById(id));
+        this.client.blobName(id).buildClient().delete();
     }
 
     @Async
@@ -65,5 +64,12 @@ public class StorageServiceImpl implements StorageService {
         this.client.blobName(name)
                 .buildClient()
                 .upload(input, size);
+    }
+
+    private StorageFileDocument findById(String id) {
+        var optional = this.repository.findById(id);
+        if (!optional.isPresent())
+            throw new BusinessException(FILE_NOT_FOUND, NOT_FOUND);
+        return optional.get();
     }
 }
