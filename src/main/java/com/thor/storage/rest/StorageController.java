@@ -34,6 +34,7 @@ import static com.thor.storage.constant.DocumentationConstant.STORAGE_DELETE_BY_
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_GET_BY_ID_DESCRIPTION;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_GET_BY_ID_SUMMARY;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_UPLOAD_DESCRIPTION;
+import static com.thor.storage.constant.DocumentationConstant.STORAGE_UPLOAD_ID;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_UPLOAD_SUMMARY;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
@@ -49,6 +50,37 @@ import static org.springframework.http.HttpStatus.OK;
 public class StorageController {
 
     private final StorageService service;
+
+    @PostMapping(consumes = MULTIPART_FORM_DATA)
+    @ResponseStatus(CREATED)
+    @Operation(
+            summary = STORAGE_UPLOAD_SUMMARY,
+            description = STORAGE_UPLOAD_DESCRIPTION,
+            responses = {
+                    @ApiResponse(
+                            responseCode = STATUS_CREATED,
+                            description = STATUS_CREATED_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = TEXT_PLAIN,
+                                    schema = @Schema(
+                                            implementation = String.class,
+                                            description = STORAGE_UPLOAD_ID
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_NOT_FOUND,
+                            description = STATUS_NOT_FOUND_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = APPLICATION_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    )
+            }
+    )
+    public String upload(@RequestParam MultipartFile file) throws IOException {
+        return this.service.insert(file);
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(OK)
@@ -76,34 +108,6 @@ public class StorageController {
     )
     public StorageResponse getById(@PathVariable String id) {
         return this.service.getById(id);
-    }
-
-    @PostMapping(consumes = MULTIPART_FORM_DATA)
-    @ResponseStatus(CREATED)
-    @Operation(
-            summary = STORAGE_UPLOAD_SUMMARY,
-            description = STORAGE_UPLOAD_DESCRIPTION,
-            responses = {
-                    @ApiResponse(
-                            responseCode = STATUS_CREATED,
-                            description = STATUS_CREATED_DESCRIPTION,
-                            content = @Content(
-                                    mediaType = TEXT_PLAIN,
-                                    schema = @Schema(implementation = String.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = STATUS_NOT_FOUND,
-                            description = STATUS_NOT_FOUND_DESCRIPTION,
-                            content = @Content(
-                                    mediaType = APPLICATION_JSON,
-                                    schema = @Schema(implementation = ExceptionResponse.class)
-                            )
-                    )
-            }
-    )
-    public String upload(@RequestParam MultipartFile file) throws IOException {
-        return this.service.insert(file);
     }
 
     @DeleteMapping("/{id}")

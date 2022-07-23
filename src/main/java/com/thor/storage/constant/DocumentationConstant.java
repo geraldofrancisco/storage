@@ -16,11 +16,22 @@ public class DocumentationConstant {
     public static final String STATUS_NOT_FOUND_DESCRIPTION = "Entity not found";
     public static final String STORAGE_UPLOAD_SUMMARY = "System file upload";
     public static final String STORAGE_UPLOAD_DESCRIPTION = "Endpoint that uploads files from the thor system";
-    public static final String STORAGE_UPLOAD_FILE_DESCRIPTION = "File to be saved";
+    public static final String STORAGE_UPLOAD_ID = "Saved file id";
+
+    public static final String RESPONSE_ID = "File id";
+    public static final String RESPONSE_NAME = "File name";
+    public static final String RESPONSE_EXTENSION = "File extension";
+    public static final String RESPONSE_MIME = "File mime";
+    public static final String RESPONSE_BYTES = "File bytes array";
 
     public static final String STORAGE_GET_BY_ID_SUMMARY = "Get file";
     public static final String STORAGE_GET_BY_ID_DESCRIPTION = "Get saved file by id";
     public static final String STORAGE_DELETE_BY_ID_SUMMARY = "Delete file";
     public static final String STORAGE_DELETE_BY_ID_DESCRIPTION = "Delete saved file by id";
 
+    public static final String ERROR_HTTP_STATUS = "HTTP status error";
+    public static final String ERROR_TIMESTAMP = "Timestamp of error";
+    public static final String ERROR_LIST = "Error list";
+    public static final String ERROR_FIELD = "Field that belongs to the error when it exists";
+    public static final String ERROR_MESSAGE = "Error message";
 }
