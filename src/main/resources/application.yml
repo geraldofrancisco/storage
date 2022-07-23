@@ -13,3 +13,7 @@ thor:
   azure:
     connection-string: DefaultEndpointsProtocol=https;AccountName=thor1935;AccountKey=U33ZMwGFeWQBD/nRtPb5IAGlU+IFnsqxE2ddjXKWZcKBTC57i5dqHTLe9/rQV6Fz0j5K2zSjUkCI+AStBfXg9g==;EndpointSuffix=core.windows.net
     container: storageapplication
+
+springdoc:
+  swagger-ui:
+    path: /

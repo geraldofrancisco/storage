@@ -17,6 +17,7 @@
 		<java.version>11</java.version>
 		<spring-cloud-azure.version>4.3.0</spring-cloud-azure.version>
 		<spring-cloud.version>2021.0.3</spring-cloud.version>
+		<spring-doc.version>1.6.9</spring-doc.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -45,6 +46,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${spring-doc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-data-rest</artifactId>
+			<version>${spring-doc.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
