@@ -1,6 +1,5 @@
 package com.thor.storage.document;
 
-import com.thor.storage.enumerable.FileType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.time.LocalDateTime.now;
 
 @Data
 @Builder
@@ -18,14 +21,15 @@ public class StorageFileDocument {
     @Id
     private String id;
 
-    @Field("dataUpload")
+    @Field("dataCriacao")
     @Builder.Default
-    private LocalDateTime uploadDate = LocalDateTime.now();
+    private LocalDateTime createdDate = now();
 
-    @Field("nome")
-    private String name;
+    @Field("dataFinalUpload")
+    private LocalDateTime finalUploadDate;
 
-    @Field("tipo")
-    private FileType type;
+    @Field("arquivos")
+    @Builder.Default
+    private List<FileDocument> files = new ArrayList<>();
 
 }

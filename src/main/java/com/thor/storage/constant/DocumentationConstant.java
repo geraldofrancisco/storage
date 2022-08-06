@@ -6,6 +6,8 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class DocumentationConstant {
+    public static final String STATUS_PROCESSING = "102";
+    public static final String STATUS_PROCESSING_DESCRIPTION = "Processing";
     public static final String STATUS_OK = "200";
     public static final String STATUS_OK_DESCRIPTION = "Successful operation";
     public static final String STATUS_CREATED = "201";
@@ -18,7 +20,12 @@ public class DocumentationConstant {
     public static final String STORAGE_UPLOAD_DESCRIPTION = "Endpoint that uploads files from the thor system";
     public static final String STORAGE_UPLOAD_ID = "Saved file id";
 
-    public static final String RESPONSE_ID = "File id";
+    public static final String RESPONSE_ID = "File list id";
+
+    public static final String RESPONSE_CREATED_DATE = "Date time of upload creation";
+    public static final String RESPONSE_FINISH_UPLOAD = "Date time of when the update of all files finished";
+    public static final String RESPONSE_FILE_ID = "File id";
+    public static final String RESPONSE_FILES = "List of files to be saved";
     public static final String RESPONSE_NAME = "File name";
     public static final String RESPONSE_EXTENSION = "File extension";
     public static final String RESPONSE_MIME = "File mime";

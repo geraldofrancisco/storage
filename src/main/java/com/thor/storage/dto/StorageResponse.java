@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import static com.thor.storage.constant.DocumentationConstant.RESPONSE_BYTES;
-import static com.thor.storage.constant.DocumentationConstant.RESPONSE_EXTENSION;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.thor.storage.constant.DocumentationConstant.RESPONSE_CREATED_DATE;
+import static com.thor.storage.constant.DocumentationConstant.RESPONSE_FILES;
+import static com.thor.storage.constant.DocumentationConstant.RESPONSE_FINISH_UPLOAD;
 import static com.thor.storage.constant.DocumentationConstant.RESPONSE_ID;
-import static com.thor.storage.constant.DocumentationConstant.RESPONSE_MIME;
-import static com.thor.storage.constant.DocumentationConstant.RESPONSE_NAME;
 
 @Data
 @Builder
@@ -18,15 +20,12 @@ public class StorageResponse {
     @Schema(description = RESPONSE_ID)
     private String id;
 
-    @Schema(description = RESPONSE_NAME)
-    private String name;
+    @Schema(description = RESPONSE_CREATED_DATE)
+    private LocalDateTime createdDate;
 
-    @Schema(description = RESPONSE_EXTENSION)
-    private String extension;
+    @Schema(description = RESPONSE_FINISH_UPLOAD)
+    private LocalDateTime finalUploadDate;
 
-    @Schema(description = RESPONSE_MIME)
-    private String mime;
-
-    @Schema(description = RESPONSE_BYTES)
-    private byte[] bytes;
+    @Schema(description = RESPONSE_FILES)
+    private List<FileResponse> files;
 }

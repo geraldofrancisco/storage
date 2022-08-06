@@ -3,10 +3,10 @@ package com.thor.storage.service;
 import com.thor.storage.dto.StorageResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 public interface StorageService {
-    String insert(MultipartFile file) throws IOException;
+    String insert(List<MultipartFile> files);
 
     StorageResponse getById(String id);
 

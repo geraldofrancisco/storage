@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.List;
 
 import static com.thor.storage.constant.DocumentationConstant.STATUS_CREATED;
 import static com.thor.storage.constant.DocumentationConstant.STATUS_CREATED_DESCRIPTION;
@@ -29,6 +29,8 @@ import static com.thor.storage.constant.DocumentationConstant.STATUS_NO_CONTENT;
 import static com.thor.storage.constant.DocumentationConstant.STATUS_NO_CONTENT_DESCRIPTION;
 import static com.thor.storage.constant.DocumentationConstant.STATUS_OK;
 import static com.thor.storage.constant.DocumentationConstant.STATUS_OK_DESCRIPTION;
+import static com.thor.storage.constant.DocumentationConstant.STATUS_PROCESSING;
+import static com.thor.storage.constant.DocumentationConstant.STATUS_PROCESSING_DESCRIPTION;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_DELETE_BY_ID_DESCRIPTION;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_DELETE_BY_ID_SUMMARY;
 import static com.thor.storage.constant.DocumentationConstant.STORAGE_GET_BY_ID_DESCRIPTION;
@@ -78,8 +80,8 @@ public class StorageController {
                     )
             }
     )
-    public String upload(@RequestParam MultipartFile file) throws IOException {
-        return this.service.insert(file);
+    public String upload(@RequestParam List<MultipartFile> files) {
+        return this.service.insert(files);
     }
 
     @GetMapping("/{id}")
@@ -99,6 +101,14 @@ public class StorageController {
                     @ApiResponse(
                             responseCode = STATUS_NOT_FOUND,
                             description = STATUS_NOT_FOUND_DESCRIPTION,
+                            content = @Content(
+                                    mediaType = APPLICATION_JSON,
+                                    schema = @Schema(implementation = ExceptionResponse.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = STATUS_PROCESSING,
+                            description = STATUS_PROCESSING_DESCRIPTION,
                             content = @Content(
                                     mediaType = APPLICATION_JSON,
                                     schema = @Schema(implementation = ExceptionResponse.class)
