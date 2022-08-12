@@ -24,10 +24,9 @@ public class DocumentationConstant {
 
     public static final String RESPONSE_CREATED_DATE = "Date time of upload creation";
     public static final String RESPONSE_FINISH_UPLOAD = "Date time of when the update of all files finished";
-    public static final String RESPONSE_FILE_ID = "File id";
+    public static final String RESPONSE_FILE = "File to be saved";
     public static final String RESPONSE_FILES = "List of files to be saved";
     public static final String RESPONSE_NAME = "File name";
-    public static final String RESPONSE_EXTENSION = "File extension";
     public static final String RESPONSE_MIME = "File mime";
     public static final String RESPONSE_BYTES = "File bytes array";
 

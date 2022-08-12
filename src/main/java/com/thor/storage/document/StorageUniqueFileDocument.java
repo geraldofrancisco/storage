@@ -17,7 +17,7 @@ import static java.time.LocalDateTime.now;
 @Builder
 @AllArgsConstructor
 @Document(collection = "arquivo")
-public class StorageFileDocument {
+public class StorageUniqueFileDocument {
     @Id
     private String id;
 
@@ -28,9 +28,7 @@ public class StorageFileDocument {
     @Field("dataFinalUpload")
     private LocalDateTime finalUploadDate;
 
-    @Field("arquivos")
-    @Builder.Default
-    private List<FileDocument> files = new ArrayList<>();
-
+    @Field("arquivo")
     private FileDocument file;
+
 }

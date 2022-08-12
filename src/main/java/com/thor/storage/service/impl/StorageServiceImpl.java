@@ -5,6 +5,7 @@ import com.thor.storage.builder.FileBuilder;
 import com.thor.storage.builder.StorageBuilder;
 import com.thor.storage.document.FileDocument;
 import com.thor.storage.document.StorageFileDocument;
+import com.thor.storage.dto.FileResponse;
 import com.thor.storage.dto.StorageResponse;
 import com.thor.storage.exception.BusinessException;
 import com.thor.storage.repository.StorageRepository;
@@ -50,44 +51,83 @@ public class StorageServiceImpl implements StorageService {
         if(storage.getFinalUploadDate() == null)
             throw new BusinessException(UPLOAD_NOT_FINISHED, PROCESSING);
 
+        var response = StorageBuilder.toResponse(storage);
+        if(storage.getFile() != null)
+            return response.files(getFileResponses(storage)).build();
+
+        return response.file(getSingleFileResponse(storage)).build();
+    }
+
+    private FileResponse getSingleFileResponse(StorageFileDocument storage) {
+        var file = FileBuilder.toResponse(storage.getFile());
+        file.setBytes(getBytes(file.getId()));
+        return file;
+    }
+
+    private List<FileResponse> getFileResponses(StorageFileDocument storage) {
         var files = storage.getFiles().stream()
                 .map(FileBuilder::toResponse)
                 .collect(Collectors.toList());
 
-        files.stream().forEach(r -> r.setBytes(this.client.blobName(r.getId()).buildClient().downloadContent().toBytes()));
+        files.stream().forEach(r -> r.setBytes(getBytes(r.getId())));
+        return files;
+    }
 
-        return StorageBuilder.toResponse(storage).files(files).build();
+    private byte[] getBytes(String file) {
+        return this.client.blobName(file).buildClient().downloadContent().toBytes();
     }
 
     @Override
     public void delete(String id) {
         var storage = findById(id);
-        storage.getFiles().stream().forEach(file -> this.client.blobName(file.getAzureId()).buildClient().delete());
+        if(storage.getFile() != null)
+            storage.getFiles().stream().forEach(file -> deleteAzure(file.getAzureId()));
+        else
+            deleteAzure(storage.getFile().getAzureId());
         this.repository.delete(storage);
+    }
+
+    private void deleteAzure(String azureId) {
+        this.client.blobName(azureId).buildClient().delete();
     }
 
     @Async
     private void uploadFile(List<MultipartFile> files, StorageFileDocument document) {
         files.stream().forEach(file -> {
             try {
-                var fileDocument = FileDocument.builder()
-                        .azureId(UUID.randomUUID().toString())
-                        .originalName(file.getOriginalFilename())
-                        .contentType(file.getContentType())
-                        .build();
-
-                this.client.blobName(fileDocument.getAzureId())
-                        .buildClient()
-                        .upload(file.getInputStream(), file.getSize());
+                FileDocument fileDocument = saveFileAzure(file);
                 document.getFiles().add(fileDocument);
 
             } catch (IOException e) {
                 log.error(format(AZURE_ERROR, file.getOriginalFilename(), e.getMessage()));
             }
-
         });
         document.setFinalUploadDate(now());
         this.repository.save(document);
+    }
+
+    @Async
+    private void uploadFile(MultipartFile file, StorageFileDocument document) {
+            try {
+                document.setFile(saveFileAzure(file));
+                document.setFinalUploadDate(now());
+                this.repository.save(document);
+            } catch (IOException e) {
+                log.error(format(AZURE_ERROR, file.getOriginalFilename(), e.getMessage()));
+            }
+    }
+
+    private FileDocument saveFileAzure(MultipartFile file) throws IOException {
+        var fileDocument = FileDocument.builder()
+                .azureId(UUID.randomUUID().toString())
+                .originalName(file.getOriginalFilename())
+                .contentType(file.getContentType())
+                .build();
+
+        this.client.blobName(fileDocument.getAzureId())
+                .buildClient()
+                .upload(file.getInputStream(), file.getSize());
+        return fileDocument;
     }
 
     private StorageFileDocument findById(String id) {
