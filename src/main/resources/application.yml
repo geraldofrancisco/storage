@@ -6,13 +6,13 @@ spring:
     name: storage
   data:
     mongodb:
-      uri: mongodb+srv://condominium:62DC9G8V4RlAwqOX@condominium.qfgszpm.mongodb.net/storage
-      database: storage
+      uri: ${mongo-connection}
+      database: ${mongo-database}
 
 thor:
   azure:
-    connection-string: DefaultEndpointsProtocol=https;AccountName=thor1935;AccountKey=U33ZMwGFeWQBD/nRtPb5IAGlU+IFnsqxE2ddjXKWZcKBTC57i5dqHTLe9/rQV6Fz0j5K2zSjUkCI+AStBfXg9g==;EndpointSuffix=core.windows.net
-    container: storageapplication
+    connection-string: ${azure-connection}
+    container: ${azure-container}
 
 springdoc:
   swagger-ui:
