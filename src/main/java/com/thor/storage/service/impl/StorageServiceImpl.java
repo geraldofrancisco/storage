@@ -80,11 +80,16 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void delete(String id) {
         var storage = findById(id);
-        if (storage.getFile() != null)
+        deleteAsync(storage);
+        this.repository.delete(storage);
+    }
+
+    @Async
+    private void deleteAsync(StorageFileDocument storage) {
+        if (storage.getFiles() != null && !storage.getFiles().isEmpty())
             storage.getFiles().stream().forEach(file -> deleteAzure(file.getAzureId()));
         else
             deleteAzure(storage.getFile().getAzureId());
-        this.repository.delete(storage);
     }
 
     private void deleteAzure(String azureId) {

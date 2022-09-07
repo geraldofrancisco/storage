@@ -17,3 +17,10 @@ thor:
 springdoc:
   swagger-ui:
     path: /
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka-url}
