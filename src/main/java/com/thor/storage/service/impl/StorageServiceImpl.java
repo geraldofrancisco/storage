@@ -53,9 +53,9 @@ public class StorageServiceImpl implements StorageService {
 
         var response = StorageBuilder.toResponse(storage);
         if (storage.getFile() != null)
-            return response.files(getFileResponses(storage)).build();
+            return response.file(getSingleFileResponse(storage)).build();
 
-        return response.file(getSingleFileResponse(storage)).build();
+        return response.files(getFileResponses(storage)).build();
     }
 
     private FileResponse getSingleFileResponse(StorageFileDocument storage) {
