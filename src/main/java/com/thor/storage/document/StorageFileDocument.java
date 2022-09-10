@@ -32,5 +32,4 @@ public class StorageFileDocument {
     @Builder.Default
     private List<FileDocument> files = new ArrayList<>();
 
-    private FileDocument file;
 }

@@ -22,6 +22,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.thor.storage.constant.ErrorConstant.AZURE_ERROR;
+import static com.thor.storage.constant.ErrorConstant.FILE_ARRAY_IS_EMPTY;
 import static com.thor.storage.constant.ErrorConstant.FILE_NOT_FOUND;
 import static com.thor.storage.constant.ErrorConstant.UPLOAD_NOT_FINISHED;
 import static java.lang.String.format;
@@ -40,6 +41,10 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public String insert(List<MultipartFile> files) {
+        if (files.isEmpty()) {
+            throw new BusinessException(FILE_ARRAY_IS_EMPTY);
+        }
+
         var document = this.repository.save(StorageFileDocument.builder().build());
         this.uploadFile(files, document);
         return document.getId();
@@ -52,16 +57,8 @@ public class StorageServiceImpl implements StorageService {
             throw new BusinessException(UPLOAD_NOT_FINISHED, PROCESSING);
 
         var response = StorageBuilder.toResponse(storage);
-        if (storage.getFile() != null)
-            return response.file(getSingleFileResponse(storage)).build();
 
         return response.files(getFileResponses(storage)).build();
-    }
-
-    private FileResponse getSingleFileResponse(StorageFileDocument storage) {
-        var file = FileBuilder.toResponse(storage.getFile());
-        file.setBytes(getBytes(file.getId()));
-        return file;
     }
 
     private List<FileResponse> getFileResponses(StorageFileDocument storage) {
@@ -86,10 +83,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Async
     private void deleteAsync(StorageFileDocument storage) {
-        if (storage.getFiles() != null && !storage.getFiles().isEmpty())
-            storage.getFiles().stream().forEach(file -> deleteAzure(file.getAzureId()));
-        else
-            deleteAzure(storage.getFile().getAzureId());
+        storage.getFiles().stream().forEach(file -> deleteAzure(file.getAzureId()));
     }
 
     private void deleteAzure(String azureId) {
@@ -98,28 +92,22 @@ public class StorageServiceImpl implements StorageService {
 
     @Async
     private void uploadFile(List<MultipartFile> files, StorageFileDocument document) {
-
-        if (!files.isEmpty() && files.size() == 1) {
-            var file = files.get(0);
+        files.stream().forEach(file -> {
             FileDocument fileDocument = saveFileAzure(file);
-            document.setFile(fileDocument);
-        } else {
-            files.stream().forEach(file -> {
-                FileDocument fileDocument = saveFileAzure(file);
-                document.getFiles().add(fileDocument);
-            });
-        }
+            document.getFiles().add(fileDocument);
+        });
+
         document.setFinalUploadDate(now());
         this.repository.save(document);
     }
 
-    private FileDocument saveFileAzure(MultipartFile file)  {
+    private FileDocument saveFileAzure(MultipartFile file) {
         try {
-        var fileDocument = FileDocument.builder()
-                .azureId(UUID.randomUUID().toString())
-                .originalName(file.getOriginalFilename())
-                .contentType(file.getContentType())
-                .build();
+            var fileDocument = FileDocument.builder()
+                    .azureId(UUID.randomUUID().toString())
+                    .originalName(file.getOriginalFilename())
+                    .contentType(file.getContentType())
+                    .build();
 
 
             this.client.blobName(fileDocument.getAzureId())

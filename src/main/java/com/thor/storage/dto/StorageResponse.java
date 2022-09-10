@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.thor.storage.constant.DocumentationConstant.RESPONSE_CREATED_DATE;
-import static com.thor.storage.constant.DocumentationConstant.RESPONSE_FILE;
 import static com.thor.storage.constant.DocumentationConstant.RESPONSE_FILES;
 import static com.thor.storage.constant.DocumentationConstant.RESPONSE_FINISH_UPLOAD;
 import static com.thor.storage.constant.DocumentationConstant.RESPONSE_ID;
+import static com.thor.storage.constant.DocumentationConstant.RESPONSE_QTD_FILES;
 
 @Data
 @Builder
@@ -30,6 +30,8 @@ public class StorageResponse {
     @Schema(description = RESPONSE_FILES)
     private List<FileResponse> files;
 
-    @Schema(description = RESPONSE_FILE)
-    private FileResponse file;
+    @Schema(description = RESPONSE_QTD_FILES)
+    public Integer getQtdFiles() {
+        return this.files.size();
+    }
 }

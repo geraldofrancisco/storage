@@ -24,8 +24,9 @@ public class DocumentationConstant {
 
     public static final String RESPONSE_CREATED_DATE = "Date time of upload creation";
     public static final String RESPONSE_FINISH_UPLOAD = "Date time of when the update of all files finished";
-    public static final String RESPONSE_FILE = "File to be saved";
     public static final String RESPONSE_FILES = "List of files to be saved";
+
+    public static final String RESPONSE_QTD_FILES = "Number of saved files";
     public static final String RESPONSE_NAME = "File name";
     public static final String RESPONSE_MIME = "File mime";
     public static final String RESPONSE_BYTES = "File bytes array";
@@ -40,4 +41,7 @@ public class DocumentationConstant {
     public static final String ERROR_LIST = "Error list";
     public static final String ERROR_FIELD = "Field that belongs to the error when it exists";
     public static final String ERROR_MESSAGE = "Error message";
+
+    public static final String ERROR_415_NOT_SUPPORTED  = "Conteúdo não suportado";
+    public static final String ERROR_424_NOT_SUPPORTED  = "Conteúdo não identificado";
 }
